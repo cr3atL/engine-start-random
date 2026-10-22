@@ -12,7 +12,8 @@ import { HemisphericLight } from '@babylonjs/core/Lights/hemisphericLight.js';
 import { DirectionalLight } from '@babylonjs/core/Lights/directionalLight.js';
 import { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator.js';
 import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent.js';
-import { paintWheel } from './lottery.js';
+import { paintWheel, paintStopFeedback } from './lottery.js';
+import {stopEnvelope} from './feedback.js';
 import { createWorkshopMaterials } from './materials.js';
 import { createPedalMotion, solveKnee } from './pedal.js';
 import { createModeling } from './modeling.js';
@@ -113,6 +114,10 @@ export function createWorld(canvas) {
   const wheelTexture=new DynamicTexture('painted rotor',{width:1024,height:1024},scene,false);paintWheel(wheelTexture.getContext());wheelTexture.hasAlpha=true;wheelTexture.update();
   const rotorMat=surface('old enamel on machined steel','#ffffff',.26,65);rotorMat.diffuseTexture=wheelTexture;rotorMat.useAlphaFromDiffuseTexture=true;
   const face=MeshBuilder.CreatePlane('enamel sectors',{width:3.6,height:3.6,sideOrientation:Mesh.DOUBLESIDE},scene);attach(face,[0,0,-.135],rotorMat,rotor,false);
+  const stopTexture=new DynamicTexture('selected enamel reflection',{width:1024,height:1024},scene,false);stopTexture.hasAlpha=true;stopTexture.getContext().clearRect(0,0,1024,1024);stopTexture.update();
+  const stopMat=surface('stop reflection','#ffffff',0,1);stopMat.diffuseTexture=stopTexture;stopMat.useAlphaFromDiffuseTexture=true;stopMat.disableLighting=true;stopMat.emissiveColor=Color3.White();stopMat.alpha=0;
+  const stopFace=face.clone('selected sector light',rotor);stopFace.position.z=-.143;stopFace.material=stopMat;stopFace.setEnabled(false);
+  const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
   disc('bearing housing',[0,0,-.19],1.06,.17,dark,rotor,48);torus('bearing bevel',[0,0,-.30],.92,.085,metal,rotor);
   disc('hub face',[0,0,-.31],.71,.12,metal,rotor,32);disc('hex spindle nut',[0,0,-.42],.30,.14,dark,rotor,6);disc('nut face',[0,0,-.50],.13,.025,oil,rotor,12);
   for(let i=0;i<3;i++){const a=i*TAU/3;bolt(Math.cos(a)*.27,Math.sin(a)*.27,-.37,rotor,.62);}
@@ -129,7 +134,7 @@ export function createWorld(canvas) {
   function smoke(x,y,z,burst=false){const p=pools[pi++%pools.length];p.life=p.max=.7+rnd()*.7;p.m.setEnabled(true);p.m.position.set(x,y,z);p.v.set(-.25-rnd()*.25,.3+rnd()*.3,(rnd()-.5)*.15);p.m.scaling.setAll(burst?.18:.1);}
   const electric=[];for(let i=0;i<3;i++){const m=link('blue ignition spark',[-.14+i*.012,.49,-.045],[-.11+i*.012,.53,-.045],.005,sparkMat,cylinder);m.setEnabled(false);electric.push(m);}
   const pedalMotion=createPedalMotion();
-  let clock=0,inputStroke=0,kickAge=99,kickPower=0,enginePhase=0,angle=0,shot='side',reaction=null,reactionTime=0,helpers=new Set(),ignitions=0,running=false,smokeAge=0,hitAge=99;
+  let clock=0,inputStroke=0,kickAge=99,kickPower=0,enginePhase=0,angle=0,shot='side',reaction=null,reactionTime=0,helpers=new Set(),ignitions=0,running=false,smokeAge=0,hitAge=99,stopAge=99,hitWeight=1;
   const pedalTip=V(-.10,.46,-.14);
   let homePos=V(),homeAim=V(),homeFov=.65,portrait=false;
   function resize(){
@@ -145,7 +150,7 @@ export function createWorld(canvas) {
   resize();window.addEventListener('resize',resize);
   function setShot(value){shot=value;side.setEnabled(value==='side');interior.setEnabled(value==='interior');scene.activeCamera=value==='side'?mainCamera:internalCamera;}
   function update(dt,render=true){
-    clock+=dt;kickAge+=dt;hitAge+=dt;if(reaction)reactionTime+=dt;
+    clock+=dt;kickAge+=dt;hitAge+=dt;stopAge+=dt;if(reaction)reactionTime+=dt;
     let stroke=pedalMotion.step(dt);
     if(running)stroke=0;
     lever.rotation.z=-stroke*1.7;
@@ -259,8 +264,10 @@ export function createWorld(canvas) {
     // An ordinary successful engine slowly shakes its mirror out of alignment.
     if(running&&!helpers.size&&reactionTime>2.3)mirrorPivot.rotation.z=smooth((reactionTime-2.3)/2)*1.2;
     rotor.rotation.z=-angle;
-    pointer.rotation.z=hitAge<.10?Math.sin(hitAge*32)*.018:0;
-    contact.setEnabled(hitAge<.045);
+    const feedback=stopEnvelope(stopAge,reducedMotion.matches);
+    pointer.rotation.z=(hitAge<.10?Math.sin(hitAge*32)*.018*hitWeight:0)+feedback.shake*.032;
+    contact.setEnabled(hitAge<.045||stopAge<.065);
+    stopMat.alpha=feedback.glow*.72;stopFace.setEnabled(stopAge<.52);
     if(render)scene.render();
   }
   // Detail stays in the geometry, but static hardware shares draw calls on phones.
@@ -289,7 +296,7 @@ export function createWorld(canvas) {
     setShot('side');
   }
   function reset(){
-    reaction=null;reactionTime=0;inputStroke=0;kickAge=99;enginePhase=0;angle=0;running=false;ignitions=0;helpers.clear();pedalMotion.reset();
+    reaction=null;reactionTime=0;inputStroke=0;kickAge=99;enginePhase=0;angle=0;running=false;ignitions=0;hitAge=99;stopAge=99;stopFace.setEnabled(false);helpers.clear();pedalMotion.reset();
     model.setGold(false);piston.setEnabled(true);arrivingPiston.setEnabled(false);mechanic.setEnabled(false);hatch.setEnabled(false);oilcan.setEnabled(false);
     lights.forEach(l=>l.material=lampOff);mirrorPivot.rotation.setAll(0);exhaust.rotation.z=0;
     exhaust.scaling.setAll(1);
@@ -301,7 +308,8 @@ export function createWorld(canvas) {
     releasePedal(){inputStroke=0;pedalMotion.release();},
     kick(power){inputStroke=0;kickAge=0;kickPower=power;pedalMotion.kick(power);},
     setWheelAngle(value){angle=value;},
-    pointerTick(){hitAge=0;},
+    pointerTick(weight=1){hitAge=0;hitWeight=weight;},
+    stopWheel(slot,kind){stopAge=0;paintStopFeedback(stopTexture.getContext(),slot,kind);stopTexture.update();},
     shoeAnchor(){const point=boot.getAbsolutePosition().add(V(.1,-.04,-.02));const p=Vector3.Project(point,Matrix.Identity(),scene.getTransformMatrix(),mainCamera.viewport.toGlobal(engine.getRenderWidth(),engine.getRenderHeight()));return{x:p.x/engine.getRenderWidth()*canvas.clientWidth,y:p.y/engine.getRenderHeight()*canvas.clientHeight};},
     async whenReady(){await model.ready();await scene.whenReadyAsync();},
     getStats(){return{meshes:scene.meshes.length,shot,helpers:[...helpers],running,model:model.getStats()};},

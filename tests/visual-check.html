@@ -12,7 +12,11 @@ document.querySelector('#reset').onclick=()=>{run=createRun();world.reset();show
 document.querySelector('#blank').onclick=()=>result(2);document.querySelector('#jam').onclick=()=>result(1);
 document.querySelector('#gold').onclick=()=>result(9,0);document.querySelector('#mechanic').onclick=()=>result(9,.99);
 document.querySelector('#spark').onclick=()=>result(0);
-document.querySelector('#rotor').onclick=()=>{world.setWheelAngle(planSpin(0,9,.5).end);world.setShot('interior');};
+document.querySelector('#rotor').onclick=()=>{freeze=false;world.setWheelAngle(planSpin(0,9,.5).end);world.setShot('interior');world.stopWheel(9,'gift');};
+for(const [slot,kind]of [[0,'spark'],[1,'piston'],[2,'blank'],[9,'gift']]){
+ const b=document.createElement('button');b.id='stop-'+kind;b.textContent='停奖 / '+kind;
+ b.onclick=()=>{freeze=true;audio.unlock();audio.cancel();world.setShot('interior');world.setWheelAngle(planSpin(0,slot,.5).end);world.stopWheel(slot,kind);audio.stopWheel(kind);world.update(.08);};document.querySelector('nav').append(b);
+}
 for(const [id,title,kind,t]of[['shoe-away','鞋离开 / 静默','spark',1.5],['shoe-near','鞋试探 / 突一下','spark',2.54],['hand-push','抢修 / 手推','piston',1.35],['shoulder-push','抢修 / 肩顶','piston',2.65],['freed','抢修 / 顶开','piston',2.95]]){
   const b=document.createElement('button');b.id=id;b.textContent=title;b.onclick=()=>{
     run=createRun();run.helpers=['mechanic'];beginKick(run,.7,()=>kind==='spark'?.01:.11);const r=settleResult(run);world.reset();world.react(r,run);finishReaction(run);freeze=true;audio.cancel();reactionTime=t;for(let elapsed=0;elapsed<t;elapsed+=1/60)world.update(Math.min(1/60,t-elapsed),false);world.update(0);show();

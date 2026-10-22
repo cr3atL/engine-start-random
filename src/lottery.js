@@ -1,5 +1,6 @@
 // The texture is drawn as engine enamel and metal part illustrations, not a UI prize card.
 import { SECTORS, TAU } from './game.js';
+import {STOP_COLORS} from './feedback.js';
 
 function rounded(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
 function plug(ctx) {
@@ -50,5 +51,26 @@ export function paintWheel(ctx,size=1024){
   for(const [radius,color,line] of [[486,'#c1c1b3',7],[475,'#151d21',5],[185,'#101719',7],[180,'#7b8582',3]]){ctx.strokeStyle=color;ctx.lineWidth=line;ctx.beginPath();ctx.arc(cx,cy,radius,0,TAU);ctx.stroke();}
   const hub=ctx.createRadialGradient(475,462,8,cx,cy,185);hub.addColorStop(0,'#818c87');hub.addColorStop(.5,'#3a4445');hub.addColorStop(1,'#20282a');ctx.fillStyle=hub;ctx.beginPath();ctx.arc(cx,cy,178,0,TAU);ctx.fill();
   for(let i=0;i<6;i++){const a=i*TAU/6;ctx.save();ctx.translate(cx+Math.cos(a)*135,cy+Math.sin(a)*135);ctx.rotate(a);ctx.fillStyle='#151e20';rounded(ctx,-28,-13,56,26,11);ctx.fill();ctx.restore();}
+  ctx.restore();
+}
+
+// A light caught on the selected enamel cell, confined to the actual rotor.
+export function paintStopFeedback(ctx,slot,kind,size=1024){
+  ctx.save();ctx.scale(size/1024,size/1024);ctx.clearRect(0,0,1024,1024);
+  const step=TAU/SECTORS.length,a=-Math.PI/2+slot*step,pad=.014;
+  const ring=(outer,inner)=>{ctx.beginPath();ctx.arc(512,512,outer,a+pad,a+step-pad);ctx.arc(512,512,inner,a+step-pad,a+pad,true);ctx.closePath();};
+  const glow=ctx.createRadialGradient(512,512,185,512,512,485);
+  glow.addColorStop(0,'transparent');glow.addColorStop(.72,STOP_COLORS[kind]+'15');glow.addColorStop(1,STOP_COLORS[kind]+'60');
+  ring(482,190);ctx.fillStyle=glow;ctx.fill();
+  ctx.strokeStyle=STOP_COLORS[kind];ctx.lineWidth=3;ctx.shadowColor=STOP_COLORS[kind];ctx.shadowBlur=12;ring(480,191);ctx.stroke();
+  ctx.shadowBlur=0;ctx.translate(512,512);ctx.rotate(a+step/2);ctx.translate(341,0);ctx.rotate(Math.PI/2);
+  if(kind==='spark'){
+    ctx.strokeStyle='#e8f5e6';ctx.lineWidth=3;
+    for(const s of [-1,1]){ctx.beginPath();ctx.moveTo(s*37,-13);ctx.lineTo(s*48,-25);ctx.lineTo(s*40,-27);ctx.lineTo(s*49,-40);ctx.stroke();}
+  }
+  if(kind==='gift'){
+    ctx.fillStyle='#f4d58a';
+    for(let i=0;i<8;i++){const angle=i*TAU/8;ctx.save();ctx.translate(Math.cos(angle)*67,Math.sin(angle)*72);ctx.rotate(angle);ctx.fillRect(-1.5,-5,3,10);ctx.restore();}
+  }
   ctx.restore();
 }

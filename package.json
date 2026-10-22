@@ -7,7 +7,7 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "node --test tests/game.test.js tests/gesture.test.js tests/pedal.test.js tests/performance.test.js tests/modeling.test.js tests/blender-asset.test.js tests/asset-url.test.js"
+    "test": "node --test tests/game.test.js tests/gesture.test.js tests/pedal.test.js tests/performance.test.js tests/modeling.test.js tests/blender-asset.test.js tests/asset-url.test.js tests/feedback.test.js"
   },
   "dependencies": {
     "@babylonjs/core": "9.31.2",
