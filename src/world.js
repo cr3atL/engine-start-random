@@ -60,12 +60,12 @@ export function createWorld(canvas) {
   for(let i=0;i<6;i++)box('wall joint',[-8+i*3.2,2.5,3.66],[.03,5,.025],dark,side,null,false);
   // All motorcycle, engine, lever, boot and trouser geometry is authored in Blender.
   const model=createBlenderMotorcycle(scene,bike,shadows,{metal,leather,denim,brass,dark});
-  const {tank,seat,staticRoots,powertrain,cylinder,piston,pistonParts,crank,rod,lever,boot,exhaust,mirrorPivot,arrivingPiston,updateTrouser}=model;
+  const {tank,seat,staticRoots,powertrain,cylinder,piston,pistonParts,crank,rod,lever,boot,exhaust,mirrorPivot,arrivingPiston,updateTrouser,layout}=model;
   modelParent=powertrain;
   const lights=[];
   // Small mechanic lives in an opening next to the crankcase, not on the rider.
-  const mechanic=node('factory mechanic');mechanic.position.set(.20,.67,-.66);mechanic.setEnabled(false);
-  const hatch=node('mechanic hatch');hatch.position.set(-.47,.66,-.60);
+  const mechanic=node('factory mechanic');mechanic.position.set(...layout.mechanic.home);mechanic.setEnabled(false);
+  const hatch=node('mechanic hatch');hatch.position.set(...layout.mechanic.hatch);
   const hatchPlate=disc('open inspection hatch',[0,0,0],.37,.045,dark,hatch);hatchPlate.rotation.y=-.9;
   const man=node('mechanic body',mechanic);
   rounded('tailored work jacket',[0,.18,0],[.27,.34,.22],.065,cloth,man,.028);
@@ -135,7 +135,7 @@ export function createWorld(canvas) {
   const electric=[];for(let i=0;i<3;i++){const m=link('blue ignition spark',[-.14+i*.012,.49,-.045],[-.11+i*.012,.53,-.045],.005,sparkMat,cylinder);m.setEnabled(false);electric.push(m);}
   const pedalMotion=createPedalMotion();
   let clock=0,inputStroke=0,kickAge=99,kickPower=0,enginePhase=0,angle=0,shot='side',reaction=null,reactionTime=0,helpers=new Set(),ignitions=0,running=false,smokeAge=0,hitAge=99,stopAge=99,hitWeight=1;
-  const pedalTip=V(-.10,.46,-.14);
+  const pedalTip=V(...layout.kick.tip);
   let homePos=V(),homeAim=V(),homeFov=.65,portrait=false;
   function resize(){
     const w=canvas.clientWidth,h=canvas.clientHeight,aspect=w/h;
@@ -153,8 +153,8 @@ export function createWorld(canvas) {
     clock+=dt;kickAge+=dt;hitAge+=dt;stopAge+=dt;if(reaction)reactionTime+=dt;
     let stroke=pedalMotion.step(dt);
     if(running)stroke=0;
-    lever.rotation.z=-stroke*1.7;
-    const tip=Vector3.TransformCoordinates(pedalTip,Matrix.RotationZ(lever.rotation.z)).add(lever.position).add(V(0,.047,0));
+    lever.rotation.z=-stroke*layout.kick.swing;
+    const tip=Vector3.TransformCoordinates(pedalTip,Matrix.RotationZ(lever.rotation.z)).add(lever.position).add(V(0,layout.kick.rubber_radius,0));
     let footLift=0;
     const firstFire=reaction?.kind==='spark'&&!reaction.success?firstIgnition(reactionTime):null;
     if(firstFire)footLift=firstFire.y;
@@ -162,10 +162,10 @@ export function createWorld(canvas) {
     if(running)footLift=.28*smooth(reactionTime/1.2);
     const pitch=-.025-clamp(stroke)*.16+footLift*.12+(firstFire?.pitch||0);
     const shoeRotation=Matrix.RotationZ(pitch);
-    const soleContact=Vector3.TransformNormal(V(.12,-.08,0),shoeRotation);
+    const soleContact=Vector3.TransformNormal(V(...layout.boot.contact),shoeRotation);
     const bootPos=tip.subtract(soleContact).add(V(firstFire?.x||0,footLift,-.015));boot.position.copyFrom(bootPos);boot.rotation.z=pitch;
-    const ankle=bootPos.add(Vector3.TransformNormal(V(-.17,.265,0),shoeRotation));
-    const hip=V(-.90,2.92-.18*clamp(stroke),ankle.z+.025),joint=solveKnee(hip,ankle,1.12,1.08);
+    const ankle=bootPos.add(Vector3.TransformNormal(V(...layout.boot.ankle),shoeRotation));
+    const hip=V(layout.rider.hip[0],layout.rider.hip[1]-.18*clamp(stroke),ankle.z+layout.rider.hip_depth),joint=solveKnee(hip,ankle,layout.rider.thigh,layout.rider.shin);
     const kneePos=V(joint.x,joint.y,joint.z);
     updateTrouser(ankle,kneePos,hip);
     let rpm=0,shake=0;
@@ -189,7 +189,7 @@ export function createWorld(canvas) {
     if(reaction?.helper==='gold'&&reactionTime<1.0){
       const t=smooth(reactionTime/.95);piston.setEnabled(false);arrivingPiston.setEnabled(true);
       const destination=Vector3.TransformCoordinates(Vector3.TransformCoordinates(V(0,.23,0),cylinder.computeWorldMatrix(true)),Matrix.Invert(powertrain.computeWorldMatrix(true)));
-      arrivingPiston.position.copyFrom(Vector3.Lerp(V(.48,1.90,-.83),destination,t));arrivingPiston.rotation.z=-1.37;
+      arrivingPiston.position.copyFrom(Vector3.Lerp(V(.48,1.90,-.83),destination,t));arrivingPiston.rotation.z=layout.cylinder.angle;
     }else{piston.setEnabled(true);arrivingPiston.setEnabled(false);}
     setLink(rod,V(Math.cos(enginePhase)*.043,-.075+Math.sin(enginePhase)*.043,-.08),V(0,pistonY-.04,-.08));
     const stomp=kickAge>.16&&kickAge<.3?Math.sin((kickAge-.16)*100)*Math.exp(-(kickAge-.16)*24)*.012*kickPower:0;
@@ -197,7 +197,7 @@ export function createWorld(canvas) {
     bike.position.set(vibration*.6,Math.cos(clock*67)*shake*.4,0);
     tank.rotation.z=vibration*.08;
     smokeAge+=dt;
-    if(shot==='side'&&smokeAge>(running?.2:.35)&&rpm>1){smokeAge=0;smoke(-2.21,.81,-.46);}
+    if(shot==='side'&&smokeAge>(running?.2:.35)&&rpm>1){smokeAge=0;smoke(...layout.exhaust.outlet);}
     for(const p of pools){if(p.life<=0)continue;p.life-=dt;p.m.position.addInPlace(p.v.scale(dt));p.m.scaling.scaleInPlace(1+dt*.65);p.m.visibility=clamp(p.life/p.max);if(p.life<=0)p.m.setEnabled(false);}
     if(helpers.has('mechanic')){
       const t=reactionTime;man.position.set(0,Math.sin(clock*2)*.006,0);man.rotation.setAll(0);
@@ -215,8 +215,8 @@ export function createWorld(canvas) {
       mechanicLegs.forEach(({upper,lower,shoe},i)=>{const x=i?.07:-.07;setLink(upper,V(x,.04,.025),V(x,-.05,.015));setLink(lower,V(x,-.05,.015),V(x,-.145,.015));shoe.position.set(x+.025,-.17,-.015);shoe.rotation.z=0;});
       if(reaction?.kind==='spark'&&!reaction.success&&t>.6&&t<1.9){arms[1].rotation.z=-1.7;arms[1].rotation.x=0;}else arms[1].rotation.z=0;
       if(reaction?.helper==='mechanic'){
-        mechanic.position.y=.67-.55*(1-smooth((t-.12)/.7));hatchPlate.rotation.y=-.9*smooth(t/.6);
-      }else mechanic.position.y=.67;
+        mechanic.position.y=layout.mechanic.home[1]-.55*(1-smooth((t-.12)/.7));hatchPlate.rotation.y=-.9*smooth(t/.6);
+      }else mechanic.position.y=layout.mechanic.home[1];
       if(running&&t>2.6){arms[1].rotation.x=1.35;arms[1].rotation.z=-.2;palms[1].rotation.x=.22;head.rotation.z=-.07;}
       if(reaction?.kind==='piston'&&t<pistonRepair(t,[...helpers]).duration){
         const repair=pistonRepair(t,[...helpers]);

@@ -1,6 +1,6 @@
 # 再来一脚 · 摩托启动原型
 
-Babylon.js 机械启动小游戏。摩托、发动机、排气、打火棍、鞋和裤腿通过 Blender MCP 在 Blender 中建模，导出 GLB 接入游戏。结构和比例参考 Honda CROSS CUB 110：弯梁、座下油箱区域、单座货架与卧式单缸。主镜头在摩托侧面近景，能看见鞋、打火棍和发动机。抓住鞋向下踩，过点火位置后切入发动机内部的十格机械转盘，最后两三格慢慢停下，再切回摩托看反应。
+Babylon.js 机械启动小游戏。摩托使用 Kamesh.Hamare 的 Yamaha RX100（CC BY 4.0），通过 Blender MCP 拆分打火棍、展开脚踏并适配原有动画。发动机开窗、鞋和裤腿在 Blender 中维护，导出 GLB 接入游戏。主镜头在摩托侧面近景，能看见鞋、打火棍和发动机。抓住鞋向下踩，过点火位置后切入发动机内部的十格机械转盘，最后两三格慢慢停下，再切回摩托看反应。
 
 [在线试玩](https://cr3atl.github.io/engine-start-random/) · [GitHub 仓库](https://github.com/cr3atL/engine-start-random)
 
@@ -47,7 +47,7 @@ npm run preview
 
 - `src/game.js`：独立的状态转换、奖项、礼盒和转盘运动曲线。
 - `src/world.js`：侧面机械近景与发动机内部两组 3D 场景、摄像机、脚踏、活塞、礼盒和成功反应。
-- `assets/blender/cc110-mcp.blend`：当前可编辑 Blender 源模型；`public/assets/models/cc110-rebuilt.glb` 是游戏实际加载的交换资产。
+- `assets/blender/rx100-game.blend`：当前可编辑 Blender 源模型；`public/assets/models/rx100-game.glb` 是游戏实际加载的交换资产。
 - `tools/blender/`：通过 Blender MCP 执行的建模、UV、导出与几何检查脚本。`docs/blender-workflow.md` 说明维护方式。
 - `src/blender-motorcycle.js`：加载 Blender 模型，连接原有脚踏、活塞、礼盒、后视镜和排气表演挂点；将 Blender 裤腿网格沿原有膝踝解算结果变形。
 - `src/modeling.js`：原有转盘及小师傅等辅助场景的几何工具；`src/crosscub.js` 为上一版车体的历史代码，已退出游戏加载路径。
@@ -64,4 +64,4 @@ npm run preview
 
 转盘先快速旋转，接着用 1.75 秒走完最后约两格半，停稳 0.52 秒后切回；减速连续且不会停稳后跳奖。测试覆盖两次点火、进度保留、无损卡顿、礼盒持久化、重复输入保护、十个落点和减速曲线、拖动速度及误触过滤。
 
-开发服务器下的 `tests/visual-check.html` 是独立的视觉验证页，可定格发动机侧面、斜视角、踩到底和踩踏斜视角，也可检查原有反应。它不进入正式构建，不改变随机结果。`assets/blender/assembly-audit.json` 保存 Blender 中的三角面交叉检查：缸体与曲轴箱、排气与曲轴箱/轮胎，以及 7 个踩踏姿态的鞋、裤腿与车体；装配法兰、轴承、鞋底踩踏等接触面单独列出。测试校验该报告与发出的 GLB 的 SHA-256 一致，并检查动画挂点、裤腿绑定姿态、UV 和三角面预算。
+开发服务器下的 `tests/visual-check.html` 是独立的视觉验证页，可定格发动机侧面、斜视角、踩到底和踩踏斜视角，也可检查原有反应。它不进入正式构建，不改变随机结果。`assets/blender/rx100-audit.json` 保存 Blender 中的三角面交叉检查：缸体与曲轴箱、排气与曲轴箱/轮胎，以及 7 个踩踏姿态的鞋、裤腿与车体；装配法兰、轴承、鞋底踩踏等接触面单独列出。测试校验该报告与发出的 GLB 的 SHA-256 一致，并检查动画挂点、裤腿绑定姿态、UV 和三角面预算。

@@ -1,17 +1,21 @@
 # Blender 模型维护
 
-当前源文件为 `assets/blender/cc110-mcp.blend`，游戏加载 `public/assets/models/cc110-rebuilt.glb`。建模必须通过 Blender MCP，在 Blender 内完成。不要再用 Babylon.js 几何替代摩托、鞋或裤腿。
+当前源文件为 `assets/blender/rx100-game.blend`，游戏加载 `public/assets/models/rx100-game.glb`，挂点参数在同目录的 `rx100-layout.json`。所有建模通过 Blender MCP 完成。
 
-作者坐标：X 朝车头、Y 向上、Z 朝车右侧；近景相机在负 Z。Blender 坐标转换为 `(x, -z, y)`，导出 glTF Y-up 后恢复作者坐标。运行时移除 Babylon 默认的 glTF X 反射，并设置对应面朝向。交换文件的单位缩放必须为 1；参考比例为 2.65 场景单位/米。
+车体来源为 [Kamesh.Hamare 的 Yamaha RX100](https://sketchfab.com/3d-models/yamaha-rx100-7615fba3db6e4e1ebd0d11eac80a0050)，许可 CC BY 4.0。保留 `public/assets/ATTRIBUTION.txt` 和操作说明中的作者、来源、许可及修改说明。这是第三方模型。
 
-主要挂点：`CC110_STATIC`、`CC110_ENGINE`、`CC110_BODY`、`CC110_CYLINDER`、`CC110_PISTON`、`CC110_CRANK`、`CC110_ROD`、`CC110_KICK`、`CC110_BOOT`、`CC110_LEG`、`CC110_MIRROR`、`CC110_EXHAUST_TIP`。修改几何时保留名称；裤腿以竖直、2.2 单位高的绑定形态导出，运行时按顶点的绑定高度沿膝踝曲线变形。
+Blender 坐标为作者游戏坐标 `(x, -z, y)`。游戏 X 朝车头、Y 向上，相机位于负 Z。原始模型采用 X 横向、负 Y 朝车头、Z 向上；适配时镜像至现有游戏朝向并以 2.2 倍缩放，反转几何法线。glTF 导出 Y-up，运行时去除 Babylon 默认根节点反射。
 
-缸体底座在 `(0.29, 0.92, 0)`，朝车头倾斜，缸筒从底座外侧延伸。检修视窗是真正去掉前侧一部分散热片和缸套，活塞中心仍在缸孔轴线上。缸盖下方的排气法兰与头段共享接头；管道沿曲轴箱下方转到外侧，消音器中心 Z 为 -0.46，以避开离合器侧盖。
+动画挂点名称使用 `RX100_` 前缀：STATIC、BODY、ENGINE、CYLINDER、PISTON、CRANK、ROD、KICK、BOOT、LEG、MIRROR、EXHAUST_TIP。裤腿网格 `RX100_TROUSER_MESH` 仍以 2.2 单位高的直立绑定姿态导出。
 
-通常打开当前 `.blend` 继续编辑，通过 MCP 执行 `finalize_cc110.py` 导出，再执行 `audit_cc110.py` 检查。全量重建在新的 Blender 文档中按以下顺序执行脚本：`rebuild_cc110.py`、`refine_cc110.py`、`exhaust_clearance.py`、`connect_exhaust.py`、`finalize_cc110.py`、`audit_cc110.py`。其中修整和排气位移脚本仅在全量重建后执行一次。
+原模型打火棍与车身合并。通过 `tools/blender/rx100-components.json` 提取轴座、杆身和橡胶踏头，展开踏头，增加侧盖间距和连接轴。缸体及独立散热片统一开窗，保留原始位置和排气接口，并装入原有活塞与连杆。后视镜、油箱和排气尾嘴分别保留动画挂点。
 
-材质在 Blender 中设置物理颜色、金属度、粗糙度，并生成交换 UV。运行时继续使用项目自带的皮革、布料和铸铝微表面纹理，以及本地 studio.env。当前机器的 Blender 材质预览曾发生显卡着色器错误，因此 Blender 使用实体材质色检查，最终 PBR 材质在 Babylon.js 实机画面中复核。
+日常修改直接打开当前 `.blend`，通过 MCP 编辑。导出必须使用 `use_active_scene=True`、`use_selection=True`，只选择 RX100_ASSET 及后代，避免带入其他检查场景。可用 `bpy.data.libraries.write(path, {scene}, fake_user=True)` 单独保存当前场景及其材质贴图依赖。
 
-检查要求：执行 `audit_cc110.py` 后报告必须 `passed: true`；`npm test` 验证报告对应当前 GLB。开发页还须检查发动机侧面、发动机斜视角、踩到底、踩到底斜视角，观察鞋底贴合、腿部连续性、接管及材质闪面。报告排除了正常的轴承、装配法兰和鞋底踏杆接触，不代表机械零件之间需要全部分离。
+全量适配脚本为 `tools/blender/prepare_rx100.py`，需要原始下载 GLB 位于 `.qa/rx100/original.glb`，并打开包含原有 CC110_BOOT、CC110_TROUSER_MESH 和活塞组件的 `cc110-mcp.blend`；旧文件只用于复用骑手及内部零件。组件表对应该原始文件的顶点顺序，换来源后须重新检查。
 
-本轮保持 `game.js`、`gesture.js`、`pedal.js`、`performance.js` 和 `audio.js` 的规则与时间轴不变；只调整模型挂点、空间连接和对应表演的接触目标。转盘和小师傅的原有造型继续保留。
+导出后通过 MCP 执行 `tools/blender/audit_rx100.py`。`assets/blender/rx100-audit.json` 记录 GLB SHA-256、独立脚踏、缸体/曲轴箱与排气接口距离、活塞余量、排气/轮胎交叉，以及 7 个踩踏姿态的鞋、裤腿和打火棍与车身三角面检查。脚踏轴座属于正常装配接触，不计入运动杆身交叉检查。接口距离为表面最近距离，套接管存在半径差，不能等同中心线断开。
+
+`npm test` 校验报告与交换文件一致、动画挂点、UV、绑定姿态和 10 万三角面的预算。另在 `tests/visual-check.html` 检查侧面、斜视角、踩到底、抢修和启动反应。Blender 使用实体材质色检查，最终 PBR 材质在 Babylon.js 复核。
+
+本轮保持 `game.js`、`gesture.js`、`pedal.js`、`performance.js` 和 `audio.js` 的规则与时间轴不变。只调整模型挂点和对应表演的空间接触。

@@ -1,0 +1,173 @@
+{
+  "glb_sha256": "99dcfa4231774725bcf7ea376ecc95621a1f6e1a3387a465197c60e28e218bc6",
+  "independent_kick": true,
+  "cylinder_case_surface_gap": 0.00023560470435768366,
+  "header_port_surface_gap": 0.00030999031150713563,
+  "header_muffler_surface_gap": 0.013631978072226048,
+  "header_tyre_intersections": 0,
+  "piston_crown_to_head_clearance": 0.032999999999999974,
+  "poses": [
+    {
+      "stroke": 0,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "kick_environment_intersections": 0,
+      "collisions": [],
+      "ankle": [
+        -0.510873556137085,
+        1.647149682044983,
+        -0.697701096534729
+      ],
+      "knee": [
+        0.1414305567741394,
+        2.5079050064086914,
+        -0.7377010583877563
+      ],
+      "hip": [
+        -0.8999999761581421,
+        2.9200000762939453,
+        -0.7777010798454285
+      ],
+      "sole_to_pedal_error": 2.0425498671328005e-08
+    },
+    {
+      "stroke": 0.25,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "kick_environment_intersections": 0,
+      "collisions": [],
+      "ankle": [
+        -0.34021323919296265,
+        1.6106722354888916,
+        -0.697701096534729
+      ],
+      "knee": [
+        0.17478370666503906,
+        2.559976100921631,
+        -0.7377010583877563
+      ],
+      "hip": [
+        -0.8999999761581421,
+        2.875,
+        -0.7777010798454285
+      ],
+      "sole_to_pedal_error": 1.3969838619232178e-08
+    },
+    {
+      "stroke": 0.58,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "kick_environment_intersections": 0,
+      "collisions": [],
+      "ankle": [
+        -0.1693592667579651,
+        1.472265601158142,
+        -0.697701096534729
+      ],
+      "knee": [
+        0.1735457181930542,
+        2.49638295173645,
+        -0.7377010583877563
+      ],
+      "hip": [
+        -0.8999999761581421,
+        2.8155999183654785,
+        -0.7777010798454285
+      ],
+      "sole_to_pedal_error": 1.3969838619232178e-08
+    },
+    {
+      "stroke": 0.68,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "kick_environment_intersections": 0,
+      "collisions": [],
+      "ankle": [
+        -0.13662053644657135,
+        1.4160581827163696,
+        -0.697701096534729
+      ],
+      "knee": [
+        0.16563677787780762,
+        2.452899932861328,
+        -0.7377010583877563
+      ],
+      "hip": [
+        -0.8999999761581421,
+        2.797600030899048,
+        -0.7777010798454285
+      ],
+      "sole_to_pedal_error": 1.2002504366276812e-07
+    },
+    {
+      "stroke": 0.85,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "kick_environment_intersections": 0,
+      "collisions": [],
+      "ankle": [
+        -0.10531026124954224,
+        1.3128929138183594,
+        -0.697701096534729
+      ],
+      "knee": [
+        0.14480331540107727,
+        2.363532304763794,
+        -0.7377010583877563
+      ],
+      "hip": [
+        -0.8999999761581421,
+        2.7669999599456787,
+        -0.7777010798454285
+      ],
+      "sole_to_pedal_error": 1.3969838619232178e-08
+    },
+    {
+      "stroke": 1,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "kick_environment_intersections": 0,
+      "collisions": [],
+      "ankle": [
+        -0.10420316457748413,
+        1.2201590538024902,
+        -0.697701096534729
+      ],
+      "knee": [
+        0.11968216300010681,
+        2.276698350906372,
+        -0.7377010583877563
+      ],
+      "hip": [
+        -0.8999999761581421,
+        2.740000009536743,
+        -0.7777010798454285
+      ],
+      "sole_to_pedal_error": 1.3969838619232178e-08
+    },
+    {
+      "stroke": 1.018,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "kick_environment_intersections": 0,
+      "collisions": [],
+      "ankle": [
+        -0.1068662703037262,
+        1.2086093425750732,
+        -0.697701096534729
+      ],
+      "knee": [
+        0.11459410190582275,
+        2.265659809112549,
+        -0.7377010583877563
+      ],
+      "hip": [
+        -0.8999999761581421,
+        2.740000009536743,
+        -0.7777010798454285
+      ],
+      "sole_to_pedal_error": 1.3969838619232178e-08
+    }
+  ],
+  "passed": true
+}

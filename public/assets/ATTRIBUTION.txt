@@ -5,5 +5,16 @@ License: Creative Commons Attribution 4.0 International
 https://creativecommons.org/licenses/by/4.0/
 File unmodified. Used as the local prefiltered image based lighting environment.
 
+rx100-game.glb / assets/blender/rx100-game.blend
+Title: Yamaha RX100
+Creator: Kamesh.Hamare (https://sketchfab.com/Kamesh.Hamare)
+Source: https://sketchfab.com/3d-models/yamaha-rx100-7615fba3db6e4e1ebd0d11eac80a0050
+License: Creative Commons Attribution 4.0 International
+https://creativecommons.org/licenses/by/4.0/
+Changes: mirrored/scaled for the game; kickstarter separated, unfolded and spaced
+from the case; independent tank, mirror and exhaust mounts; machined cylinder
+inspection window and bore; original game piston, footwear and trouser meshes;
+mobile texture resizing. This is a third-party fan model, not a Yamaha asset.
+
 boot-leather-albedo.png
 Generated for this project using OpenAI imagegen. No third-party photograph used as an asset.
