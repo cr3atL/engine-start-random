@@ -1,0 +1,173 @@
+{
+  "glb_sha256": "7738e1a2fa28c601467390bd1a0da9723d70ef1913ad48c2574679c610445317",
+  "barrel_case_surface_intersections": 0,
+  "header_port_endpoint_gap": 0.0,
+  "header_case_surface_intersections": 0,
+  "header_tyre_surface_intersections": 0,
+  "header_muffler_mating_intersections": 50,
+  "header_muffler_endpoint_gap": 0.0,
+  "piston_crown_to_head_clearance": 0.00649999999999995,
+  "poses": [
+    {
+      "stroke": 0,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "joints": {
+        "ankle": [
+          -0.5412852764129639,
+          1.6391414403915405,
+          -0.6349999904632568
+        ],
+        "knee": [
+          0.13160818815231323,
+          2.483898401260376,
+          -0.6225000023841858
+        ],
+        "hip": [
+          -0.8999999761581421,
+          2.9200000762939453,
+          -0.6100000143051147
+        ]
+      }
+    },
+    {
+      "stroke": 0.25,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "joints": {
+        "ankle": [
+          -0.3284146785736084,
+          1.6504181623458862,
+          -0.6349999904632568
+        ],
+        "knee": [
+          0.18575698137283325,
+          2.6001694202423096,
+          -0.6225000023841858
+        ],
+        "hip": [
+          -0.8999999761581421,
+          2.875,
+          -0.6100000143051147
+        ]
+      }
+    },
+    {
+      "stroke": 0.58,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "joints": {
+        "ankle": [
+          -0.0790867879986763,
+          1.5410081148147583,
+          -0.6349999904632568
+        ],
+        "knee": [
+          0.19608041644096375,
+          2.5853657722473145,
+          -0.6225000023841858
+        ],
+        "hip": [
+          -0.8999999761581421,
+          2.8155999183654785,
+          -0.6100000143051147
+        ]
+      }
+    },
+    {
+      "stroke": 0.68,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "joints": {
+        "ankle": [
+          -0.02069370448589325,
+          1.4845043420791626,
+          -0.6349999904632568
+        ],
+        "knee": [
+          0.19081589579582214,
+          2.543590545654297,
+          -0.6225000023841858
+        ],
+        "hip": [
+          -0.8999999761581421,
+          2.797600030899048,
+          -0.6100000143051147
+        ]
+      }
+    },
+    {
+      "stroke": 0.85,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "joints": {
+        "ankle": [
+          0.05287441983819008,
+          1.37095046043396,
+          -0.6349999904632568
+        ],
+        "knee": [
+          0.17250525951385498,
+          2.4443042278289795,
+          -0.6225000023841858
+        ],
+        "hip": [
+          -0.8999999761581421,
+          2.7669999599456787,
+          -0.6100000143051147
+        ]
+      }
+    },
+    {
+      "stroke": 1,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "joints": {
+        "ankle": [
+          0.08746030181646347,
+          1.2593555450439453,
+          -0.6349999904632568
+        ],
+        "knee": [
+          0.145294189453125,
+          2.337805986404419,
+          -0.6225000023841858
+        ],
+        "hip": [
+          -0.8999999761581421,
+          2.740000009536743,
+          -0.6100000143051147
+        ]
+      }
+    },
+    {
+      "stroke": 1.018,
+      "shoe_environment_intersections": 0,
+      "leg_environment_intersections": 0,
+      "joints": {
+        "ankle": [
+          0.08959261327981949,
+          1.2456226348876953,
+          -0.6349999904632568
+        ],
+        "knee": [
+          0.14131909608840942,
+          2.32438325881958,
+          -0.6225000023841858
+        ],
+        "hip": [
+          -0.8999999761581421,
+          2.736759901046753,
+          -0.6100000143051147
+        ]
+      }
+    }
+  ],
+  "contact_exclusions": [
+    "kick splined shaft in its bearing",
+    "shoe sole on rubber pedal",
+    "mating flange and gasket",
+    "exhaust flange and spigot"
+  ],
+  "passed": true
+}

@@ -1,0 +1,37 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>机械反应验证</title><style>body{margin:0;background:#222b29;color:#ddd;font:11px sans-serif}canvas{position:fixed;inset:0;width:100%;height:100%}nav{position:fixed;bottom:12px;left:12px;right:12px;display:flex;flex-wrap:wrap;gap:6px}button{padding:8px 11px;background:#293a35;color:#e0d5b8;border:1px solid #b0a07a;border-radius:3px;font:inherit;cursor:pointer}output{position:fixed;top:12px;left:12px;background:#0006;padding:8px;max-width:80%;overflow-wrap:anywhere}</style><canvas id="world"></canvas><output id="state">loading</output><nav><button id="reset">重置</button><button id="blank">空转</button><button id="jam">卡活塞</button><button id="gold">金色活塞</button><button id="mechanic">小师傅</button><button id="spark">点火一次</button><button id="rotor">内部转盘停在礼盒</button></nav><script type="module">
+import {createWorld} from '../src/world.js';
+import {createRun,beginKick,settleResult,finishReaction,planSpin} from '../src/game.js';
+import {createAudio} from '../src/audio.js';
+const audio=createAudio();
+const world=createWorld(document.querySelector('canvas'));let run=createRun(),last=performance.now(),freeze=false,reactionTime=0;
+const output=document.querySelector('output');
+for(const [id,label,action]of[['compress','压到阻力点',()=>world.setStroke(.58)],['kick','踩到底',()=>world.kick(.75)],['release','松脚回弹',()=>world.releasePedal()]]){const b=document.createElement('button');b.id=id;b.textContent=label;b.onclick=action;document.querySelector('nav').append(b);}
+function show(){output.textContent=JSON.stringify(run);}
+function result(slot,random=0){if(run.phase==='running')return;audio.unlock();audio.cancel();freeze=false;reactionTime=0;beginKick(run,.7,()=>slot/10+.01);const r=settleResult(run,()=>random);world.react(r,run);audio.react(r,run.helpers);finishReaction(run);show();}
+document.querySelector('#reset').onclick=()=>{run=createRun();world.reset();show();};
+document.querySelector('#blank').onclick=()=>result(2);document.querySelector('#jam').onclick=()=>result(1);
+document.querySelector('#gold').onclick=()=>result(9,0);document.querySelector('#mechanic').onclick=()=>result(9,.99);
+document.querySelector('#spark').onclick=()=>result(0);
+document.querySelector('#rotor').onclick=()=>{world.setWheelAngle(planSpin(0,9,.5).end);world.setShot('interior');};
+for(const [id,title,kind,t]of[['shoe-away','鞋离开 / 静默','spark',1.5],['shoe-near','鞋试探 / 突一下','spark',2.54],['hand-push','抢修 / 手推','piston',1.35],['shoulder-push','抢修 / 肩顶','piston',2.65],['freed','抢修 / 顶开','piston',2.95]]){
+  const b=document.createElement('button');b.id=id;b.textContent=title;b.onclick=()=>{
+    run=createRun();run.helpers=['mechanic'];beginKick(run,.7,()=>kind==='spark'?.01:.11);const r=settleResult(run);world.reset();world.react(r,run);finishReaction(run);freeze=true;audio.cancel();reactionTime=t;for(let elapsed=0;elapsed<t;elapsed+=1/60)world.update(Math.min(1/60,t-elapsed),false);world.update(0);show();
+  };document.querySelector('nav').append(b);
+}
+document.querySelector('#reset').addEventListener('click',()=>{freeze=false;audio.cancel();reactionTime=0;});
+const whole=document.createElement('button');whole.id='whole-bike';whole.textContent='整车轮廓检查';whole.onclick=()=>{freeze=true;world.reset();world.update(0);const camera=world.scene.activeCamera;camera.position.set(.02,1.55,-6.4);camera.setTarget(camera.position.clone().set(.02,1.35,0));camera.fov=.62;world.scene.render();};document.querySelector('nav').append(whole);
+for(const [id,title,stroke,position,target] of [
+ ['engine-side','发动机侧面',0,[.42,1.12,-2.5],[.27,.94,0]],
+ ['engine-oblique','发动机斜视角',0,[1.65,1.50,-2.5],[.22,.95,0]],
+ ['pedal-bottom','踩到底检查',1,[.75,1.45,-3.6],[.22,1.05,0]],
+ ['pedal-oblique','踩到底斜视角',1,[1.8,1.55,-3.1],[.22,1.0,0]],
+]){
+ const b=document.createElement('button');b.id=id;b.textContent=title;b.onclick=()=>{
+  freeze=true;audio.cancel();world.reset();
+  if(stroke){world.kick(.75);for(let i=0;i<12;i++)world.update(1/60,false);}
+  world.update(0,false);const camera=world.scene.activeCamera;camera.position.set(...position);camera.setTarget(camera.position.clone().set(...target));camera.fov=.62;world.scene.render();
+  output.textContent=JSON.stringify({view:id,...world.getStats()});
+ };document.querySelector('nav').append(b);
+}
+await world.whenReady();document.body.dataset.ready='true';show();world.engine.runRenderLoop(()=>{const now=performance.now(),dt=Math.min(.1,(now-last)/1000);if(!freeze){reactionTime+=dt;world.update(dt);audio.updateReaction(reactionTime);audio.update(now/1000,run.running);}last=now;});
+</script></html>

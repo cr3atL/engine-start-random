@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.npm-cache/
+.qa/
+*.log
+*.blend1
+*.blend2
+# Local reference footage and the superseded Blender intermediate are not published.
+*.mp4
+assets/blender/cc110-rebuilt.blend
+.env
+.env.*
+!.env.example
+.codex/

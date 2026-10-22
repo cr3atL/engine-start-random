@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1d211f"><meta name="description" content="抓住鞋，踩下打火棍。发动机里的机械转盘决定这一脚会发生什么。两次点火，看看这辆破摩托到底能不能着。"><title>再来一脚 · 摩托启动模拟器</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23212a2b'/%3E%3Cpath d='M20 12v26l17 13h13v-9L31 30V12' fill='%23c39a61'/%3E%3C/svg%3E"></head>
+<body>
+  <canvas id="world" aria-label="摩托发动机、鞋和打火棍的侧面近景"></canvas>
+  <div id="vignette"></div><div id="cut-flash"></div>
+  <header><div class="identity"><span class="chapter" id="shot-label">01 / 脚踏启动</span><h1>再来一脚<span>。</span></h1></div><div class="top-actions"><button id="sound" aria-label="关闭声音" title="关闭声音"><svg viewBox="0 0 24 24"><path d="m11 5-6 4H2v6h3l6 4V5Z"/><path id="sound-wave" d="M15 8c2 2 2 6 0 8m3-11c4 4 4 10 0 14"/></svg></button><button id="help" aria-label="查看操作说明">?</button></div></header>
+  <aside class="engine-status"><span class="status-label">点火状态</span><div class="ignition-lights"><i id="light-one"></i><i id="light-two"></i><span id="ignition-text">0 / 2</span></div><small id="engine-condition">冷车 · 尚未启动</small></aside>
+  <div class="helper-tags" id="helper-tags" aria-live="polite"></div>
+  <button id="kick-target" class="kick-target" aria-label="抓住鞋向下拖动，踩过点火位置启动" hidden><span class="target-ring"></span><span class="target-arrow">↓</span><span class="target-label">抓住鞋，往下踩</span></button>
+  <div class="stroke-gauge" id="stroke-gauge" hidden><span>点火位置</span><div><i id="stroke-fill"></i><b></b></div></div>
+  <div id="wheel-caption" class="wheel-caption" hidden><span>发动机内部</span><strong id="wheel-state">机械转盘运转中</strong><small id="wheel-hint">听最后几声。</small></div>
+  <section class="bottom-bar"><div class="reaction-copy"><span id="result-name">祖传摩托 · 冷启动</span><p id="reaction-text">这一脚下去，应该就能着了。</p></div><div class="operation"><span id="operation-text">鼠标 / 手指抓住鞋向下拖，越快越有劲</span><small id="kick-count">尚未踩踏 · 空格也可代踩一脚</small></div><button id="reset">↻ <span>重新来过</span></button></section>
+  <button id="keyboard-kick" class="sr-only" aria-label="用中等力度踩一脚">踩一脚</button>
+  <section id="success" class="success" hidden><span>发动机持续运转中</span><strong>这回，真的着了。</strong><button id="again">不信邪，再来一次 ↻</button></section>
+  <div id="help-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="help-title"><div class="help-card"><span>老车启动须知</span><h2 id="help-title">鞋放上去。<br>往下使劲。</h2><p>鼠标或手指抓住鞋往下拖。踩过点火位置，发动机内部的转盘就会转起来。拖得越快，转得越猛。</p><dl><dt>火花塞</dt><dd>累计两次点火，摩托才真正启动。</dd><dt>活塞</dt><dd>卡一下，再挣脱。零件不会坏，点火进度保留。</dd><dt>礼盒</dt><dd>金色活塞或原厂小师傅，陪你到这局结束。</dd></dl><p class="help-key">空格 / Enter：中等力度代踩一脚。Esc：关闭说明。</p><button id="help-close">懂了，来一脚 →</button></div></div>
+  <div id="loading"><div class="loading-ring"></div><strong>正在给祖传发动机上油……</strong></div>
+  <div id="fatal" hidden><h2>发动机暂时没能出场</h2><p>请使用支持 WebGL 的浏览器，并开启硬件加速。</p><button onclick="location.reload()">再试一次</button></div>
+  <script type="module" src="/src/main.js"></script>
+</body></html>

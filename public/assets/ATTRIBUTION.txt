@@ -1,0 +1,9 @@
+studio.env
+Creator: Babylon.js contributors / BabylonJS Assets
+Source: https://github.com/BabylonJS/Assets/blob/master/environments/studio.env
+License: Creative Commons Attribution 4.0 International
+https://creativecommons.org/licenses/by/4.0/
+File unmodified. Used as the local prefiltered image based lighting environment.
+
+boot-leather-albedo.png
+Generated for this project using OpenAI imagegen. No third-party photograph used as an asset.
