@@ -49,6 +49,7 @@ npm run preview
 - `src/world.js`：侧面机械近景与发动机内部两组 3D 场景、摄像机、脚踏、活塞、礼盒和成功反应。
 - `assets/blender/rx100-game.blend`：当前可编辑 Blender 源模型；`public/assets/models/rx100-game.glb` 是游戏实际加载的交换资产。
 - `tools/blender/`：通过 Blender MCP 执行的建模、UV、导出与几何检查脚本。`docs/blender-workflow.md` 说明维护方式。
+- `src/engine-pose.js`：按原车测量轴线解算固定杆长的活塞、连杆与曲轴运动，保持原有游戏相位。
 - `src/blender-motorcycle.js`：加载 Blender 模型，连接原有脚踏、活塞、礼盒、后视镜和排气表演挂点；将 Blender 裤腿网格沿原有膝踝解算结果变形。
 - `src/modeling.js`：原有转盘及小师傅等辅助场景的几何工具；`src/crosscub.js` 为上一版车体的历史代码，已退出游戏加载路径。
 - `src/performance.js`：鞋与发动机的第一次点火表演、小师傅抢修分段动作、归还控制的时点与共用音效标记。

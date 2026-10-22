@@ -6,6 +6,7 @@ import {VertexData} from '@babylonjs/core/Meshes/mesh.vertexData.js';
 import {Vector3,Quaternion} from '@babylonjs/core/Maths/math.vector.js';
 import {assetUrl} from './asset-url.js';
 import layout from '../public/assets/models/rx100-layout.json';
+import {enginePose} from './engine-pose.js';
 
 const V=(x=0,y=0,z=0)=>new Vector3(x,y,z);
 
@@ -16,8 +17,8 @@ export function createBlenderMotorcycle(scene,bike,shadows,materials){
   const tank=node('Blender bodywork'),seat=node('saddle motion mount');
   const powertrain=node('helper performance mount');powertrain.position.y=.22;powertrain.scaling.setAll(.64);
   const cylinder=node('Blender cylinder');cylinder.position.set(...layout.cylinder.mount);cylinder.rotation.z=layout.cylinder.angle;
-  const piston=node('Blender piston',cylinder);piston.position.set(0,.23,0);
-  const crank=node('Blender crank',cylinder);crank.position.set(0,-.075,-.08);
+  const piston=node('Blender piston',cylinder);piston.position.set(0,layout.cylinder.piston_rest,0);
+  const crank=node('Blender crank',cylinder);crank.position.set(...layout.mechanism.crank_center);
   const rod=node('Blender connecting rod',cylinder);
   const lever=node('Blender kickstarter');lever.position.set(...layout.kick.pivot);
   const boot=node('Blender boot');
@@ -26,6 +27,12 @@ export function createBlenderMotorcycle(scene,bike,shadows,materials){
   const arrivingPiston=node('gold piston being installed',powertrain);arrivingPiston.scaling.setAll(1/.64);arrivingPiston.setEnabled(false);
   const pistonParts=[];let cloth=null,bind=null,positions=null,indices=null,loadError=null,ready=false;
   let clothPose=null;
+  function updateEngine(phase){
+    const pose=enginePose(phase,layout.mechanism);
+    piston.position.y=pose.pistonY;crank.rotation.z=phase;
+    rod.position.set(...pose.crankPin);rod.rotationQuaternion=null;rod.rotation.set(0,0,pose.rodAngle);rod.scaling.setAll(1);
+    return pose;
+  }
   function updateTrouser(ankle,knee,hip){
     clothPose=[ankle.clone(),knee.clone(),hip.clone()];
     if(!cloth)return;
@@ -74,7 +81,7 @@ export function createBlenderMotorcycle(scene,bike,shadows,materials){
     ready=true;return result;
   }).catch(error=>{loadError=error;throw error;});
   return {tank,seat,powertrain,cylinder,piston,crank,rod,lever,boot,exhaust,mirrorPivot,arrivingPiston,pistonParts,
-    staticRoots:[],updateTrouser,layout,
+    staticRoots:[],updateTrouser,updateEngine,layout,
     ready:()=>readyPromise,
     setGold(enabled){pistonParts.forEach(m=>m.material=enabled&&m.metadata.originalMaterial.name.includes('turned')?materials.brass:m.metadata.originalMaterial);},
     getStats:()=>({asset:'Yamaha RX100 / Blender',ready,error:loadError?.message,clothVertices:bind?.length/3||0}),

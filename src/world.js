@@ -184,14 +184,13 @@ export function createWorld(canvas) {
     }
     if(kickAge<.35)rpm=13;
     if(pedalMotion.mode==='drag'&&!running)enginePhase=Math.max(0,stroke)*TAU*1.2;
-    enginePhase+=dt*rpm;crank.rotation.z=enginePhase;
-    const pistonY=.23+Math.sin(enginePhase)*.065;piston.position.y=pistonY;
+    enginePhase+=dt*rpm;
+    const {pistonY}=model.updateEngine(enginePhase);
     if(reaction?.helper==='gold'&&reactionTime<1.0){
       const t=smooth(reactionTime/.95);piston.setEnabled(false);arrivingPiston.setEnabled(true);
-      const destination=Vector3.TransformCoordinates(Vector3.TransformCoordinates(V(0,.23,0),cylinder.computeWorldMatrix(true)),Matrix.Invert(powertrain.computeWorldMatrix(true)));
+      const destination=Vector3.TransformCoordinates(Vector3.TransformCoordinates(V(0,pistonY,0),cylinder.computeWorldMatrix(true)),Matrix.Invert(powertrain.computeWorldMatrix(true)));
       arrivingPiston.position.copyFrom(Vector3.Lerp(V(.48,1.90,-.83),destination,t));arrivingPiston.rotation.z=layout.cylinder.angle;
     }else{piston.setEnabled(true);arrivingPiston.setEnabled(false);}
-    setLink(rod,V(Math.cos(enginePhase)*.043,-.075+Math.sin(enginePhase)*.043,-.08),V(0,pistonY-.04,-.08));
     const stomp=kickAge>.16&&kickAge<.3?Math.sin((kickAge-.16)*100)*Math.exp(-(kickAge-.16)*24)*.012*kickPower:0;
     const vibration=Math.sin(clock*(running?71:53))*shake+stomp;
     bike.position.set(vibration*.6,Math.cos(clock*67)*shake*.4,0);
@@ -304,6 +303,7 @@ export function createWorld(canvas) {
   }
   hatch.setEnabled(false);
   return {engine,scene,update,react,reset,setShot,
+    inspectEngine(phase){return model.updateEngine(phase);},
     setStroke(value){inputStroke=clamp(value);pedalMotion.setTarget(inputStroke);},
     releasePedal(){inputStroke=0;pedalMotion.release();},
     kick(power){inputStroke=0;kickAge=0;kickPower=power;pedalMotion.kick(power);},

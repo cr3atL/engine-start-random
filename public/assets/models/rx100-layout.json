@@ -5,14 +5,38 @@
   "source_scale": 2.2,
   "cylinder": {
     "mount": [
-      0.4399999976158142,
-      1.121999979019165,
+      0.2945728898048401,
+      1.1809171438217163,
       0.0
     ],
-    "angle": 0.39,
-    "inspection": "original transparent shell",
-    "piston_rest": 0.23,
+    "angle": -0.32764012991041136,
+    "inspection": "localized native shell window",
+    "piston_rest": 0.19649698489750503,
     "piston_travel": 0.065
+  },
+  "mechanism": {
+    "crank_center": [
+      0.03876548074185848,
+      -0.1452818422112614,
+      0
+    ],
+    "throw": 0.065,
+    "rod_length": 0.34,
+    "wrist": [
+      0,
+      -0.018,
+      0
+    ],
+    "top_phase": 1.6666603259369672,
+    "bottom_phase": -1.4293598580488853,
+    "bore_radius": 0.086,
+    "head_height": 0.379937,
+    "measured_axis": [
+      0.3218095898628235,
+      0.946804404258728,
+      0.0
+    ],
+    "native_axis_offset": -0.10112756490707397
   },
   "kick": {
     "pivot": [

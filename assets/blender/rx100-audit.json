@@ -1,13 +1,13 @@
 {
-  "glb_sha256": "74af2146fcb356e95a2f3adf40ebbf5a2fade6a81500f34eb13a8a0ee8cd8771",
-  "original_shell_transparency": 0.10000000149011612,
+  "glb_sha256": "48ca5cec58c7ce15211d06f59ff1aeb9fc10209db43f5b50aa041ab396de5a53",
+  "original_shell_transparency": 0.20000000298023224,
   "extra_cylinder_sleeves": [],
   "independent_kick": true,
-  "cylinder_case_surface_gap": 0.00023560470435768366,
+  "cylinder_case_surface_gap": 0.0011110305786132812,
   "header_port_surface_gap": 9.066374332178384e-06,
   "header_muffler_surface_gap": 0.013631978072226048,
   "header_tyre_intersections": 0,
-  "piston_crown_to_head_clearance": 0.032999999999999974,
+  "piston_crown_to_head_clearance": 0.04807836723684588,
   "poses": [
     {
       "stroke": 0,
@@ -171,5 +171,361 @@
       "sole_to_pedal_error": 1.3969838619232178e-08
     }
   ],
-  "passed": true
+  "passed": true,
+  "engine_poses": [
+    {
+      "phase": 0.0,
+      "piston_y": 0.19649698489750503,
+      "big_pin_error": 0.0,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 5.139856373848062e-09,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 0.19634954084936207,
+      "piston_y": 0.20957547372963717,
+      "big_pin_error": 2.9802322387695312e-08,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 5.557936705313793e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 0.39269908169872414,
+      "piston_y": 0.222915608616049,
+      "big_pin_error": 0.0,
+      "small_pin_error": 1.228781230931777e-07,
+      "rod_length_error": 1.4687127847246018e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 0.5890486225480862,
+      "piston_y": 0.23591755790695876,
+      "big_pin_error": 0.0,
+      "small_pin_error": 1.1920928955078125e-07,
+      "rod_length_error": 7.505616822500727e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 0.7853981633974483,
+      "piston_y": 0.24795395343314322,
+      "big_pin_error": 0.0,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 7.35017660069559e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 0.9817477042468103,
+      "piston_y": 0.2584161502680348,
+      "big_pin_error": 1.1920928955078125e-07,
+      "small_pin_error": 1.1920928955078125e-07,
+      "rod_length_error": 4.773631151477886e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 1.1780972450961724,
+      "piston_y": 0.2667612958827949,
+      "big_pin_error": 0.0,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 3.677957399750298e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 1.3744467859455345,
+      "piston_y": 0.27255442214775444,
+      "big_pin_error": 0.0,
+      "small_pin_error": 0.0,
+      "rod_length_error": 3.409681337274151e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 1.5707963267948966,
+      "piston_y": 0.27550098695575764,
+      "big_pin_error": 0.0,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 3.540998183559907e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 1.7671458676442586,
+      "piston_y": 0.2754671302147199,
+      "big_pin_error": 0.0,
+      "small_pin_error": 1.1920928955078125e-07,
+      "rod_length_error": 4.265676256665074e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 1.9634954084936207,
+      "piston_y": 0.27248644946452083,
+      "big_pin_error": 0.0,
+      "small_pin_error": 0.0,
+      "rod_length_error": 2.6221659954472898e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 2.1598449493429825,
+      "piston_y": 0.2667533377756265,
+      "big_pin_error": 0.0,
+      "small_pin_error": 0.0,
+      "rod_length_error": 1.3895332495739154e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 2.356194490192345,
+      "piston_y": 0.25860394098047346,
+      "big_pin_error": 0.0,
+      "small_pin_error": 1.228781230931777e-07,
+      "rod_length_error": 9.387731703114355e-09,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 2.552544031041707,
+      "piston_y": 0.2484867076800855,
+      "big_pin_error": 1.4901161193847656e-08,
+      "small_pin_error": 0.0,
+      "rod_length_error": 3.306961948723597e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 2.748893571891069,
+      "piston_y": 0.2369255707856837,
+      "big_pin_error": 0.0,
+      "small_pin_error": 1.228781230931777e-07,
+      "rod_length_error": 6.730941498611642e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 2.945243112740431,
+      "piston_y": 0.22447973793824785,
+      "big_pin_error": 1.4901161193847656e-08,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 3.95187583213108e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 3.141592653589793,
+      "piston_y": 0.2117045205947399,
+      "big_pin_error": 0.0,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 4.773631151477886e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 3.3379421944391554,
+      "piston_y": 0.19911799138864153,
+      "big_pin_error": 1.1920928955078125e-07,
+      "small_pin_error": 1.228781230931777e-07,
+      "rod_length_error": 3.95187583213108e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 3.5342917352885173,
+      "piston_y": 0.18717673283783823,
+      "big_pin_error": 0.0,
+      "small_pin_error": 1.1920928955078125e-07,
+      "rod_length_error": 7.826614878414517e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 3.730641276137879,
+      "piston_y": 0.17626256751284916,
+      "big_pin_error": 0.0,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 2.7591251894332203e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 3.9269908169872414,
+      "piston_y": 0.16668004848245707,
+      "big_pin_error": 1.4901161193847656e-08,
+      "small_pin_error": 0.0,
+      "rod_length_error": 1.9941259754574503e-10,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 4.123340357836604,
+      "piston_y": 0.15866228142873315,
+      "big_pin_error": 5.960464477539063e-08,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 4.308188583657113e-09,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 4.319689898685965,
+      "piston_y": 0.1523821067654699,
+      "big_pin_error": 6.143906154658885e-08,
+      "small_pin_error": 1.1920928955078125e-07,
+      "rod_length_error": 8.100533221977457e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 4.516039439535327,
+      "piston_y": 0.14796504643633854,
+      "big_pin_error": 0.0,
+      "small_pin_error": 1.1920928955078125e-07,
+      "rod_length_error": 4.265676256665074e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 4.71238898038469,
+      "piston_y": 0.1455009917241292,
+      "big_pin_error": 5.960464477539063e-08,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 1.9373700310687525e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 4.908738521234052,
+      "piston_y": 0.14505233836937306,
+      "big_pin_error": 5.960464477539063e-08,
+      "small_pin_error": 1.1920928955078125e-07,
+      "rod_length_error": 2.0686866386565583e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 5.105088062083414,
+      "piston_y": 0.14665695318374397,
+      "big_pin_error": 0.0,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 3.677957399750298e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 5.301437602932776,
+      "piston_y": 0.1503250939211415,
+      "big_pin_error": 0.0,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 7.0473726299091766e-09,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 5.497787143782138,
+      "piston_y": 0.15603006093512686,
+      "big_pin_error": 2.9802322387695312e-08,
+      "small_pin_error": 0.0,
+      "rod_length_error": 1.8718077754442675e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 5.6941366846315,
+      "piston_y": 0.16369341773972243,
+      "big_pin_error": 5.960464477539063e-08,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 9.315759330608131e-09,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 5.890486225480862,
+      "piston_y": 0.17316677066820355,
+      "big_pin_error": 5.960464477539063e-08,
+      "small_pin_error": 2.9802322387695312e-08,
+      "rod_length_error": 4.009655502068554e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 6.086835766330224,
+      "piston_y": 0.18421372718003085,
+      "big_pin_error": 5.960464477539063e-08,
+      "small_pin_error": 0.0,
+      "rod_length_error": 6.494472920559602e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": 1.6666603259369672,
+      "piston_y": 0.27585863276315414,
+      "big_pin_error": 0.0,
+      "small_pin_error": 0.0,
+      "rod_length_error": 3.649359919810635e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    },
+    {
+      "phase": -1.4293598580488853,
+      "piston_y": 0.1449721542049998,
+      "big_pin_error": 5.960464477539063e-08,
+      "small_pin_error": 0.0,
+      "rod_length_error": 3.3754415429410045e-08,
+      "piston_casting_intersections": 0,
+      "rod_case_intersections": 0,
+      "crank_case_intersections": 0
+    }
+  ],
+  "opaque_cylinder_fraction": 0.8285234792715358,
+  "piston_radial_clearance": 0.009999999999999995,
+  "measured_cylinder_axis": [
+    0.3218095898628235,
+    0.946804404258728,
+    0.0
+  ],
+  "actual_cylinder_axis": [
+    0.3218095898628235,
+    0.0,
+    0.946804404258728
+  ],
+  "axis_alignment_error": 0.0,
+  "engine_passed": true
 }

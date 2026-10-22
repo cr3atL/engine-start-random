@@ -1,5 +1,5 @@
 """Run through Blender MCP. Adapt Kamesh.Hamare's CC BY RX100 to the game."""
-import bpy,bmesh,math,json
+import bpy,bmesh,math,json,numpy as np
 from pathlib import Path
 from mathutils import Vector,Matrix
 
@@ -37,7 +37,20 @@ kick_pivot=G((-.1637,.1188,.39725))
 kick=empty('RX100_KICK',asset,kick_pivot)
 mirror_pos=G((-.180,-.375,1.240));mirror=empty('RX100_MIRROR',asset,mirror_pos)
 tip_pos=G((-.184,.940,.3375));exhaust=empty('RX100_EXHAUST_TIP',asset,tip_pos)
-cylinder_pos=Vector((.44,1.122,0));cylinder_angle=.39
+# Measure the native cooling-fin plane, not the diagonal of the head's AABB.
+fin_points=np.array([tuple(original.vertices[i].co) for i in indices([579])])
+_,axes=np.linalg.eigh(np.cov(fin_points.T));axis_source=Vector(axes[:,0])
+if axis_source.z<0:axis_source=-axis_source
+axis=Vector((-axis_source.y,axis_source.z,0)).normalized();across=Vector((axis.y,-axis.x,0))
+cylinder_angle=math.atan2(-axis.x,axis.y)
+core_points=[G(original.vertices[i].co) for i in indices([0])]
+axis_offset=(min(p.dot(across) for p in core_points)+max(p.dot(across) for p in core_points))*.5
+base_height=min(p.dot(axis) for p in core_points)
+cylinder_pos=across*axis_offset+axis*base_height
+case_part=next(p for p in parts if 23006 in p['indices'])
+crank_world=G((0,(case_part['low'][1]+case_part['high'][1])*.5,(case_part['low'][2]+case_part['high'][2])*.5))
+crank_delta=crank_world-cylinder_pos
+mechanism={'crank_center':[crank_delta.dot(across),crank_delta.dot(axis),0],'throw':.065,'rod_length':.34,'wrist':[0,-.018,0]}
 cylinder=empty('RX100_CYLINDER',engine,cylinder_pos);cylinder.rotation_euler.y=-cylinder_angle
 piston=empty('RX100_PISTON',cylinder,(0,.23,0));crank=empty('RX100_CRANK',cylinder,(0,-.075,-.08));rod=empty('RX100_ROD',cylinder)
 boot=empty('RX100_BOOT',asset);leg=empty('RX100_LEG',asset)
@@ -69,6 +82,7 @@ mirror_indices=[p['indices'][0] for p in parts if p['high'][0]<-.17 and p['low']
 mount(extract('RX100 right mirror',mirror_indices),mirror)
 fin_seeds=[p['indices'][0] for p in parts if p['vertices']==24 and p['low'][2]>.55 and p['high'][2]<.735 and p['low'][1]>-.30 and p['high'][1]<-.05 and p['low'][0]>-.09 and p['high'][0]<.09]
 barrel=extract('RX100 original cylinder and head',[0,*fin_seeds])
+case=extract('RX100 original crankcase',[7202,23006,23010]);mount(case,static)
 header=extract('RX100 original exhaust header',[50])
 mount(header,static)
 muffler=extract('RX100 original muffler',[22523])
@@ -80,26 +94,7 @@ for o,front in [(muffler,False),(tail,True)]:
     bm.to_mesh(o.data);bm.free()
 mount(muffler,static);mount(tail,exhaust)
 
-# Keep the source cylinder and every cooling fin intact. Its own shell is the
-# inspection view, rather than adding a second cylinder around the same space.
-mount(barrel,cylinder)
-xray=bpy.data.materials.new('RX100 original cylinder / inspection transparency');xray.use_nodes=True
-shader=next(n for n in xray.node_tree.nodes if n.type=='BSDF_PRINCIPLED')
-shader.inputs['Base Color'].default_value=(.34,.40,.42,1)
-shader.inputs['Metallic'].default_value=.25;shader.inputs['Roughness'].default_value=.52
-shader.inputs['Alpha'].default_value=.10;xray.diffuse_color=(.34,.40,.42,.10)
-xray.use_backface_culling=True
-# Read available enums instead of relying on a Blender-version-specific mode.
-prop=xray.bl_rna.properties.get('surface_render_method')
-if prop:
-    modes=[i.identifier for i in prop.enum_items]
-    if 'DITHERED' in modes:xray.surface_render_method='DITHERED'
-barrel.data.materials.append(xray)
-bm=bmesh.new();bm.from_mesh(barrel.data)
-bmesh.ops.bisect_plane(bm,geom=list(bm.verts)+list(bm.edges)+list(bm.faces),plane_co=P((0,.405,0)),plane_no=P((0,1,0)),dist=.000001)
-for face in bm.faces:
-    if face.calc_center_median().z<.405:face.material_index=1
-bm.to_mesh(barrel.data);bm.free()
+exec(compile((ROOT/'tools/blender/rx100_engine.py').read_text(encoding='utf8'),'rx100_engine.py','exec'))
 cut=[]
 # Preserve authored footwear and trousers, and the existing internal moving parts.
 def copy_children(old_name,parent):
@@ -108,7 +103,7 @@ def copy_children(old_name,parent):
         if child.type!='MESH':continue
         o=child.copy();o.data=child.data.copy();scene.collection.objects.link(o);o.name='RX100 '+child.name.split(' | ')[-1];o.parent=parent;o.matrix_parent_inverse=Matrix.Identity(4);o.matrix_basis=child.matrix_basis.copy()
 copy_children('CC110_BOOT',boot)
-copy_children('CC110_PISTON',piston);copy_children('CC110_CRANK',crank);copy_children('CC110_ROD',rod)
+
 old_cloth=bpy.data.objects.get('RX100_TROUSER_MESH')
 if old_cloth:old_cloth.name='inspection / RX100_TROUSER_MESH'
 cloth_source=bpy.data.objects['CC110_TROUSER_MESH'];cloth=cloth_source.copy();cloth.data=cloth_source.data.copy();scene.collection.objects.link(cloth);cloth.name='RX100_TROUSER_MESH';cloth.parent=leg;cloth.matrix_basis=Matrix.Identity(4)
@@ -158,7 +153,8 @@ tread_points=[kick.matrix_world.inverted()@tread.matrix_world@v.co for v in trea
 local_tip=Vector((sum(p.x for p in tread_points)/len(tread_points),sum(p.z for p in tread_points)/len(tread_points),-sum(p.y for p in tread_points)/len(tread_points)))
 local_tip.z=min(-p.y for p in tread_points)*.82+local_tip.z*.18
 layout={'asset':'rx100-game.glb','prefix':'RX100','units_per_metre':2.65,'source_scale':S,
-    'cylinder':{'mount':list(cylinder_pos),'angle':cylinder_angle,'inspection':'original transparent shell','piston_rest':.23,'piston_travel':.065},
+    'cylinder':{'mount':list(cylinder_pos),'angle':cylinder_angle,'inspection':'localized native shell window','piston_rest':py,'piston_travel':.065},
+    'mechanism':mechanism,
     'kick':{'pivot':list(kick_pivot),'tip':list(local_tip),'rubber_radius':.035,'swing':1.7},
     'boot':{'contact':[.12,-.08,.10],'ankle':[-.17,.265,0]},
     'rider':{'hip':[-.90,2.92,0],'hip_depth':-.08,'thigh':1.12,'shin':1.08},
