@@ -2,6 +2,7 @@
 import {createWorld} from '../src/world.js';
 import {createRun,beginKick,settleResult,finishReaction,planSpin} from '../src/game.js';
 import {createAudio} from '../src/audio.js';
+import {Vector3,Quaternion} from '@babylonjs/core/Maths/math.vector.js';
 const audio=createAudio();
 const world=createWorld(document.querySelector('canvas'));let run=createRun(),last=performance.now(),freeze=false,reactionTime=0;
 const output=document.querySelector('output');
@@ -35,6 +36,17 @@ for(const [id,title,stroke,position,target] of [
   if(stroke){world.kick(.75);for(let i=0;i<12;i++)world.update(1/60,false);}
   world.update(0,false);const camera=world.scene.activeCamera;camera.position.set(...position);camera.setTarget(camera.position.clone().set(...target));camera.fov=.62;world.scene.render();
   output.textContent=JSON.stringify({view:id,...world.getStats()});
+ };document.querySelector('nav').append(b);
+}
+for(const [id,title,height]of[['piston-top','活塞上止点',.295],['piston-bottom','活塞下止点',.165]]){
+ const b=document.createElement('button');b.id=id;b.textContent=title;b.onclick=()=>{
+  document.querySelector('#engine-side').click();
+  world.scene.getTransformNodeByName('Blender piston').position.y=height;
+  const phase=height>.23?Math.PI/2:-Math.PI/2;
+  world.scene.getTransformNodeByName('Blender crank').rotation.z=phase;
+  const a=new Vector3(Math.cos(phase)*.043,-.075+Math.sin(phase)*.043,-.08),c=new Vector3(0,height-.04,-.08),dir=c.subtract(a);
+  const rod=world.scene.getTransformNodeByName('Blender connecting rod');rod.position.copyFrom(a.add(c).scale(.5));rod.scaling.y=dir.length();rod.rotationQuaternion=Quaternion.FromUnitVectorsToRef(Vector3.Up(),dir.normalize(),new Quaternion());
+  world.scene.render();output.textContent=JSON.stringify({view:id,pistonHeight:height});
  };document.querySelector('nav').append(b);
 }
 await world.whenReady();document.body.dataset.ready='true';show();world.engine.runRenderLoop(()=>{const now=performance.now(),dt=Math.min(.1,(now-last)/1000);if(!freeze){reactionTime+=dt;world.update(dt);audio.updateReaction(reactionTime);audio.update(now/1000,run.running);}last=now;});

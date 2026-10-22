@@ -1,8 +1,10 @@
 {
-  "glb_sha256": "99dcfa4231774725bcf7ea376ecc95621a1f6e1a3387a465197c60e28e218bc6",
+  "glb_sha256": "74af2146fcb356e95a2f3adf40ebbf5a2fade6a81500f34eb13a8a0ee8cd8771",
+  "original_shell_transparency": 0.10000000149011612,
+  "extra_cylinder_sleeves": [],
   "independent_kick": true,
   "cylinder_case_surface_gap": 0.00023560470435768366,
-  "header_port_surface_gap": 0.00030999031150713563,
+  "header_port_surface_gap": 9.066374332178384e-06,
   "header_muffler_surface_gap": 0.013631978072226048,
   "header_tyre_intersections": 0,
   "piston_crown_to_head_clearance": 0.032999999999999974,

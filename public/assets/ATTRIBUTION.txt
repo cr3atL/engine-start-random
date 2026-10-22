@@ -13,7 +13,7 @@ License: Creative Commons Attribution 4.0 International
 https://creativecommons.org/licenses/by/4.0/
 Changes: mirrored/scaled for the game; kickstarter separated, unfolded and spaced
 from the case; independent tank, mirror and exhaust mounts; machined cylinder
-inspection window and bore; original game piston, footwear and trouser meshes;
+inspection transparency (original shell retained, no added cylinder sleeve); original game piston, footwear and trouser meshes;
 mobile texture resizing. This is a third-party fan model, not a Yamaha asset.
 
 boot-leather-albedo.png

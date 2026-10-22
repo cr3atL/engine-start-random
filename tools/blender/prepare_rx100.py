@@ -80,38 +80,27 @@ for o,front in [(muffler,False),(tail,True)]:
     bm.to_mesh(o.data);bm.free()
 mount(muffler,static);mount(tail,exhaust)
 
-# Keep the original silhouette and exhaust port; open only a lateral inspection sector.
+# Keep the source cylinder and every cooling fin intact. Its own shell is the
+# inspection view, rather than adding a second cylinder around the same space.
 mount(barrel,cylinder)
+xray=bpy.data.materials.new('RX100 original cylinder / inspection transparency');xray.use_nodes=True
+shader=next(n for n in xray.node_tree.nodes if n.type=='BSDF_PRINCIPLED')
+shader.inputs['Base Color'].default_value=(.34,.40,.42,1)
+shader.inputs['Metallic'].default_value=.25;shader.inputs['Roughness'].default_value=.52
+shader.inputs['Alpha'].default_value=.10;xray.diffuse_color=(.34,.40,.42,.10)
+xray.use_backface_culling=True
+# Read available enums instead of relying on a Blender-version-specific mode.
+prop=xray.bl_rna.properties.get('surface_render_method')
+if prop:
+    modes=[i.identifier for i in prop.enum_items]
+    if 'DITHERED' in modes:xray.surface_render_method='DITHERED'
+barrel.data.materials.append(xray)
 bm=bmesh.new();bm.from_mesh(barrel.data)
-# The source fin stack has disconnected surfaces: explicitly split every edge at
-# the five window boundaries before removing the inside, avoiding torn n-gons.
-for co,no in [((-.14,0,0),(1,0,0)),((.14,0,0),(1,0,0)),((0,.04,0),(0,1,0)),((0,.4,0),(0,1,0)),((0,0,.02),(0,0,1))]:
-    bmesh.ops.bisect_plane(bm,geom=list(bm.verts)+list(bm.edges)+list(bm.faces),plane_co=P(co),plane_no=P(no),dist=.000001)
-cut=[f for f in bm.faces if (lambda c:abs(c.x)<.139999 and .040001<c.z<.399999 and -c.y<.019999)(f.calc_center_median())]
-bmesh.ops.delete(bm,geom=cut,context='FACES');bm.to_mesh(barrel.data);bm.free()
-
-def simple_material(name,color,metallic,roughness):
-    m=bpy.data.materials.new(name);m.use_nodes=True
-    p=next(n for n in m.node_tree.nodes if n.type=='BSDF_PRINCIPLED')
-    p.inputs['Base Color'].default_value=(*color,1);p.inputs['Metallic'].default_value=metallic;p.inputs['Roughness'].default_value=roughness;m.diffuse_color=(*color,1)
-    return m
-liner_mat=simple_material('RX100 machined inspection bore',(.12,.135,.14),.82,.34)
-# A C-shaped bore supports the original piston animation without an opaque front wall.
-verts=[];faces=[];segments=36
-for y in [.005,.398]:
-    for radius in [.108,.125]:
-        for i in range(segments+1):
-            a=-math.pi*.08+i/segments*math.pi*1.16
-            verts.append(tuple(P((math.cos(a)*radius,y,math.sin(a)*radius))))
-ring=segments+1
-for i in range(segments):
-    for offset in [0,ring]:faces.append((offset+i,offset+i+1,2*ring+offset+i+1,2*ring+offset+i))
-    faces.append((i,ring+i,ring+i+1,i+1));faces.append((2*ring+i,2*ring+i+1,3*ring+i+1,3*ring+i))
-faces.extend([(0,2*ring,3*ring,ring),(segments,ring+segments,3*ring+segments,2*ring+segments)])
-mesh=bpy.data.meshes.new('RX100 bore sleeve geometry');mesh.from_pydata(verts,[],faces);mesh.materials.append(liner_mat)
-liner=bpy.data.objects.new('RX100 inspection bore sleeve',mesh);scene.collection.objects.link(liner);liner.parent=cylinder
-bm=bmesh.new();bm.from_mesh(mesh);bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces));bm.to_mesh(mesh);bm.free()
-
+bmesh.ops.bisect_plane(bm,geom=list(bm.verts)+list(bm.edges)+list(bm.faces),plane_co=P((0,.405,0)),plane_no=P((0,1,0)),dist=.000001)
+for face in bm.faces:
+    if face.calc_center_median().z<.405:face.material_index=1
+bm.to_mesh(barrel.data);bm.free()
+cut=[]
 # Preserve authored footwear and trousers, and the existing internal moving parts.
 def copy_children(old_name,parent):
     source=bpy.data.objects[old_name]
@@ -155,7 +144,7 @@ for mat in {m for o in asset.children_recursive if o.type=='MESH' for m in o.dat
 for o in asset.children_recursive:
     if o.type!='MESH':continue
     uv=o.data.uv_layers.active or o.data.uv_layers.new(name='Surface UV')
-    if o in [liner,shaft]:
+    if o==shaft:
         for poly in o.data.polygons:
             for li in poly.loop_indices:
                 p=o.data.vertices[o.data.loops[li].vertex_index].co;uv.data[li].uv=(p.x*3,p.z*3)
@@ -169,7 +158,7 @@ tread_points=[kick.matrix_world.inverted()@tread.matrix_world@v.co for v in trea
 local_tip=Vector((sum(p.x for p in tread_points)/len(tread_points),sum(p.z for p in tread_points)/len(tread_points),-sum(p.y for p in tread_points)/len(tread_points)))
 local_tip.z=min(-p.y for p in tread_points)*.82+local_tip.z*.18
 layout={'asset':'rx100-game.glb','prefix':'RX100','units_per_metre':2.65,'source_scale':S,
-    'cylinder':{'mount':list(cylinder_pos),'angle':cylinder_angle,'piston_rest':.23,'piston_travel':.065},
+    'cylinder':{'mount':list(cylinder_pos),'angle':cylinder_angle,'inspection':'original transparent shell','piston_rest':.23,'piston_travel':.065},
     'kick':{'pivot':list(kick_pivot),'tip':list(local_tip),'rubber_radius':.035,'swing':1.7},
     'boot':{'contact':[.12,-.08,.10],'ankle':[-.17,.265,0]},
     'rider':{'hip':[-.90,2.92,0],'hip_depth':-.08,'thigh':1.12,'shin':1.08},

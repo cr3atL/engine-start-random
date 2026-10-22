@@ -25,6 +25,9 @@ test('Blender exchange preserves animation mounts, bind shape and texture coordi
   const boot=gltf.nodes.find(n=>n.name==='RX100_BOOT');assert.ok(!boot.translation||boot.translation.every(v=>Math.abs(v)<1e-5));
   assert.equal(gltf.nodes.find(n=>n.name==='RX100_KICK').children.length,3);
   assert.ok(!gltf.nodes.some(n=>n.name.startsWith('inspection /')||n.name==='Cube'));
+  const shell=gltf.materials.find(m=>m.name.includes('inspection transparency'));
+  assert.equal(shell.alphaMode,'BLEND');assert.ok(shell.pbrMetallicRoughness.baseColorFactor[3]<.3);
+  assert.ok(!gltf.nodes.some(n=>n.name.includes('bore sleeve')),'no second cylinder over the source engine');
   const clothNode=gltf.nodes.find(n=>n.name==='RX100_TROUSER_MESH'),cloth=gltf.meshes[clothNode.mesh].primitives[0];
   const bounds=gltf.accessors[cloth.attributes.POSITION];assert.ok(Math.abs(bounds.max[1]-2.2)<1e-5);assert.ok(Math.abs(bounds.min[1])<1e-5);
   let triangles=0;

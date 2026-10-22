@@ -56,8 +56,9 @@ export function createBlenderMotorcycle(scene,bike,shadows,materials){
       m.isPickable=false;m.receiveShadows=true;
       // The removed root reflection also reverses the expected face winding.
       m.sideOrientation=Material.CounterClockWiseSideOrientation;
-      if(m.getTotalVertices())shadows.addShadowCaster(m,false);
       const mat=m.material;if(!mat)continue;
+      // A diagnostic shell should not cast an opaque shadow over its own piston.
+      if(m.getTotalVertices()&&!mat.name.includes('inspection transparency'))shadows.addShadowCaster(m,false);
       if(mat.name.includes('sand cast'))mat.bumpTexture=materials.metal.bumpTexture;
       if(mat.name.includes('leather')){mat.albedoTexture=materials.leather.albedoTexture;mat.albedoColor.set(1,.84,.65);mat.bumpTexture=materials.leather.bumpTexture;}
       if(mat.name.includes('cotton')){mat.albedoTexture=materials.denim.albedoTexture;mat.albedoColor.set(.26,.32,.38);}

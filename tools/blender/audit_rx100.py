@@ -52,7 +52,10 @@ def minimum_gap(a,b):
     t=tree([b]);return min(t.find_nearest(a.matrix_world@v.co)[3] for v in a.data.vertices)
 chassis=next(o for o in meshes('RX100_STATIC') if 'chassis, engine' in o.name)
 tyres=[o for o in meshes('RX100_STATIC') if 'Tyer' in o.name]
-report={'glb_sha256':hashlib.sha256((ROOT/'public/assets/models/rx100-game.glb').read_bytes()).hexdigest(),'independent_kick':len(meshes('RX100_KICK'))==3,'cylinder_case_surface_gap':minimum_gap(head,chassis),'header_port_surface_gap':minimum_gap(header,head),'header_muffler_surface_gap':minimum_gap(header,muffler),'header_tyre_intersections':len(tree([header]).overlap(tree(tyres))),'piston_crown_to_head_clearance':.398-(.23+.065+.07),'poses':poses}
+shell=next(m for m in head.data.materials if m and 'inspection transparency' in m.name)
+alpha=next(n for n in shell.node_tree.nodes if n.type=='BSDF_PRINCIPLED').inputs['Alpha'].default_value
+extra_bores=[o.name for o in meshes('RX100_CYLINDER') if 'bore sleeve' in o.name]
+report={'glb_sha256':hashlib.sha256((ROOT/'public/assets/models/rx100-game.glb').read_bytes()).hexdigest(),'original_shell_transparency':alpha,'extra_cylinder_sleeves':extra_bores,'independent_kick':len(meshes('RX100_KICK'))==3,'cylinder_case_surface_gap':minimum_gap(head,chassis),'header_port_surface_gap':minimum_gap(header,head),'header_muffler_surface_gap':minimum_gap(header,muffler),'header_tyre_intersections':len(tree([header]).overlap(tree(tyres))),'piston_crown_to_head_clearance':.398-(.23+.065+.07),'poses':poses}
 report['passed']=report['independent_kick'] and report['header_port_surface_gap']<.04 and report['header_muffler_surface_gap']<.04 and report['piston_crown_to_head_clearance']>0 and all(p['shoe_environment_intersections']==0 and p['leg_environment_intersections']==0 for p in poses)
-report['passed']=report['passed'] and report['cylinder_case_surface_gap']<.025 and report['header_tyre_intersections']==0 and all(p['kick_environment_intersections']==0 for p in poses)
+report['passed']=report['passed'] and not extra_bores and .01<alpha<.3 and report['cylinder_case_surface_gap']<.025 and report['header_tyre_intersections']==0 and all(p['kick_environment_intersections']==0 for p in poses)
 (ROOT/'assets/blender/rx100-audit.json').write_text(json.dumps(report,indent=2),encoding='utf8');print(json.dumps(report))

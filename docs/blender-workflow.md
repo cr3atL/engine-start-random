@@ -8,7 +8,7 @@ Blender 坐标为作者游戏坐标 `(x, -z, y)`。游戏 X 朝车头、Y 向上
 
 动画挂点名称使用 `RX100_` 前缀：STATIC、BODY、ENGINE、CYLINDER、PISTON、CRANK、ROD、KICK、BOOT、LEG、MIRROR、EXHAUST_TIP。裤腿网格 `RX100_TROUSER_MESH` 仍以 2.2 单位高的直立绑定姿态导出。
 
-原模型打火棍与车身合并。通过 `tools/blender/rx100-components.json` 提取轴座、杆身和橡胶踏头，展开踏头，增加侧盖间距和连接轴。缸体及独立散热片统一开窗，保留原始位置和排气接口，并装入原有活塞与连杆。后视镜、油箱和排气尾嘴分别保留动画挂点。
+原模型打火棍与车身合并。通过 `tools/blender/rx100-components.json` 提取轴座、杆身和橡胶踏头，展开踏头，增加侧盖间距和连接轴。完整保留原车缸体及散热片，下半壳体使用 10% 不透明度的局部透视材质，上部缸盖保持实体；删除额外的缸套，内部仅保留一套活塞与连杆。保持原始缸体位置和排气接口。后视镜、油箱和排气尾嘴分别保留动画挂点。
 
 日常修改直接打开当前 `.blend`，通过 MCP 编辑。导出必须使用 `use_active_scene=True`、`use_selection=True`，只选择 RX100_ASSET 及后代，避免带入其他检查场景。可用 `bpy.data.libraries.write(path, {scene}, fake_user=True)` 单独保存当前场景及其材质贴图依赖。
 
